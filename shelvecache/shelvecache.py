@@ -1,3 +1,8 @@
+"""
+ShelveCache
+-----------
+"""
+
 import shelve
 from functools import _make_key, wraps
 
@@ -18,14 +23,18 @@ def persistent_cache(filename):
     """
 
     def decorator(func):
+        mem_cache = {}
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             with shelve.open(filename=filename, writeback=True) as cache:
                 key = str(hash(_make_key(args=args, kwds=kwargs, typed=False)))
                 return (
                     value
-                    if (value := cache.get(key))
-                    else cache.setdefault(key, func(*args, **kwargs))
+                    if (value := mem_cache.get(key))
+                    else mem_cache.setdefault(
+                        key, cache.setdefault(key, func(*args, **kwargs))
+                    )
                 )
 
         return wrapper
@@ -42,7 +51,7 @@ def expensive_operation(x, y):
 
 # Test the decorated function
 if __name__ == "__main__":
-    print(
-        expensive_operation(38, 2)
+    expensive_operation(
+        38, 2
     )  # Output: Performing expensive operation... Cache miss! 6
-    print(expensive_operation(2, 3))  # Output: Cache hit! 6
+    expensive_operation(2, 3)  # Output: Cache hit! 6
