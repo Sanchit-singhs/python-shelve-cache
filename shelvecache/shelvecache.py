@@ -1,5 +1,6 @@
-import shelve
 import functools
+import shelve
+
 
 def persistent_cache(filename):
     def decorator(func):
@@ -15,8 +16,11 @@ def persistent_cache(filename):
                     result = func(*args, **kwargs)
                     cache[key] = result
                     return result
+
         return wrapper
+
     return decorator
+
 
 # Example usage:
 @persistent_cache("cache.db")
@@ -24,6 +28,11 @@ def expensive_operation(x, y):
     print("Performing expensive operation...")
     return x * y
 
+
 # Test the decorated function
-print(expensive_operation(2, 3))  # Output: Performing expensive operation... Cache miss! 6
-print(expensive_operation(2, 3))  # Output: Cache hit! 6
+
+if __name__ == "__main__":
+    print(
+        expensive_operation(2, 3)
+    )  # Output: Performing expensive operation... Cache miss! 6
+    print(expensive_operation(2, 3))  # Output: Cache hit! 6

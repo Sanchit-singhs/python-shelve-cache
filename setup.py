@@ -14,7 +14,7 @@ LONG_DESCRIPTION = "This will allow to save cached output on disk."
 
 # Setting up
 setup(
-    name="Shelve Cache",
+    name="shelve_cache",
     version=VERSION,
     author="Sanchit Singh",
     author_email="<sanchitsingh849@gmail.com>",
