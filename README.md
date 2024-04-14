@@ -26,7 +26,7 @@ pip install shelve-caching-decorator
 1. **Decorator Application:** Use the `@persistent_cache` decorator to cache function results.
 
     ```python
-    from shelve_caching_decorator import persistent_cache
+    from shelvecache import persistent_cache
 
     @persistent_cache("cache.db")
     def expensive_operation(x, y):
