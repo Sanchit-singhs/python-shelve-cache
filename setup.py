@@ -1,26 +1,29 @@
-from setuptools import setup, find_packages
 import codecs
 import os
+
+from setuptools import find_packages, setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.1'
-DESCRIPTION = 'A basic caching decorator'
-LONG_DESCRIPTION = 'A package that allows to cache data in disk.'
+VERSION = "0.0.13"
+DESCRIPTION = "Persistant decorator"
+LONG_DESCRIPTION = "This will allow to save cached output on disk."
 
 # Setting up
 setup(
-    name="caching decorator",
+    name="Shelve Cache",
     version=VERSION,
     author="Sanchit Singh",
     author_email="<sanchitsingh849@gmail.com>",
     description=DESCRIPTION,
+    long_description_content_type="text/markdown",
+    long_description=long_description,
     packages=find_packages(),
     install_requires=[],
-    keywords=['python', 'video', 'stream', 'video stream', 'camera stream', 'sockets'],
+    keywords=["python", "cache", "shelve", "decorator", "sockets"],
     classifiers=[
         "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
@@ -28,5 +31,5 @@ setup(
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
-    ]
+    ],
 )
