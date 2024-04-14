@@ -1,21 +1,32 @@
-import functools
 import shelve
+from functools import _make_key, wraps
 
 
 def persistent_cache(filename):
+    """
+    A decorator to cache the results of a function using shelve.
+
+    This decorator wraps a function to cache its return value based on its
+    arguments. If the function is called with the same arguments again,
+    it retrieves the cached result instead of recomputing.
+
+    Args:
+        filename (str): The name of the shelve file to store the cached results.
+
+    Returns:
+        function: The decorated function.
+    """
+
     def decorator(func):
-        @functools.wraps(func)
+        @wraps(func)
         def wrapper(*args, **kwargs):
-            with shelve.open(filename) as cache:
-                key = (args, frozenset(kwargs.items()))
-                if key in cache:
-                    print("Cache hit!")
-                    return cache[key]
-                else:
-                    print("Cache miss!")
-                    result = func(*args, **kwargs)
-                    cache[key] = result
-                    return result
+            with shelve.open(filename=filename, writeback=True) as cache:
+                key = str(hash(_make_key(args=args, kwds=kwargs, typed=False)))
+                return (
+                    value
+                    if (value := cache.get(key))
+                    else cache.setdefault(key, func(*args, **kwargs))
+                )
 
         return wrapper
 
@@ -23,16 +34,15 @@ def persistent_cache(filename):
 
 
 # Example usage:
-@persistent_cache("cache.db")
+@persistent_cache("cache")
 def expensive_operation(x, y):
     print("Performing expensive operation...")
     return x * y
 
 
 # Test the decorated function
-
 if __name__ == "__main__":
     print(
-        expensive_operation(2, 3)
+        expensive_operation(38, 2)
     )  # Output: Performing expensive operation... Cache miss! 6
     print(expensive_operation(2, 3))  # Output: Cache hit! 6
